@@ -19,7 +19,7 @@ export const NavBar: React.FC = () => {
 
 				<div className="flex items-center gap-2 rounded-2xl bg-gray-100 p-1">
 					<Link to="/" className={linkStyles("/")}>
-						Home
+						Početna
 					</Link>
 
 					<Link to="/parking" className={linkStyles("/parking")}>
