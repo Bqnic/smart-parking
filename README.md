@@ -1,2 +1,1 @@
-# smart-parking
-IOT Smart Parking web application
+# Smart Parking
