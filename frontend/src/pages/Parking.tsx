@@ -1,65 +1,14 @@
+import { observer } from "mobx-react-lite";
 import { ParkingMap } from "../components/parking-map/ParkingMap";
-import {
-	ParkingSpotRamp,
-	ParkingSpotStatus,
-	type ParkingSpot,
-} from "../types/parking-spot.types";
+import { ParkingSpotStatus } from "../types/parking-spot.types";
+import { parkingStore } from "../stores/parking-store";
 
-// test data
-const parkingSpots = [
-	{
-		id: "P1",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 4,
-	},
-	{
-		id: "P2",
-		status: ParkingSpotStatus.OCCUPIED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 6,
-	},
-	{
-		id: "P3",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 14,
-	},
-	{
-		id: "P4",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 2,
-	},
-	{
-		id: "P5",
-		status: ParkingSpotStatus.OCCUPIED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 4,
-	},
-	{
-		id: "P6",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 6,
-	},
-	{
-		id: "P7",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 15,
-	},
-] as ParkingSpot[];
+export const Parking: React.FC = observer(() => {
+	const { spots } = parkingStore;
 
-export const Parking: React.FC = () => {
-	const freeSpots = parkingSpots.filter(
+	const freeSpots = spots.filter(
 		(spot) => spot.status === ParkingSpotStatus.FREE,
 	).length;
-
-	const handleSpotClick = (spot: (typeof parkingSpots)[number]) => {
-		// TODO: backend
-		console.log("Kliknuto mjesto:", spot.id);
-	};
 
 	return (
 		<main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-5xl flex-col px-4 py-6">
@@ -113,11 +62,8 @@ export const Parking: React.FC = () => {
 					</p>
 				</div>
 
-				<ParkingMap
-					spots={parkingSpots}
-					onSpotClick={handleSpotClick}
-				/>
+				<ParkingMap />
 			</section>
 		</main>
 	);
-};
+});

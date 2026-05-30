@@ -53,11 +53,11 @@ function processParkingMessage(data) {
 		return null;
 	}
 
-	const parking_spot = parts[3];
+	const id = parts[3];
 	const field = parts[4]; // status | ramp | distance
 
 	const result = {
-		parking_spot,
+		id,
 		status: undefined,
 		ramp: undefined,
 		distance: undefined,

@@ -1,3 +1,6 @@
+import { parkingStore } from "../stores/parking-store";
+import type { ParkingSpot } from "../types/parking-spot.types";
+
 const ws = new WebSocket("ws://localhost:8080");
 
 ws.onopen = () => {
@@ -13,6 +16,8 @@ ws.onerror = (err) => {
 };
 
 ws.onmessage = (event) => {
-	const data = JSON.parse(event.data);
-	console.log(data);
+	const parkingSpot: ParkingSpot = JSON.parse(event.data);
+	console.log(parkingSpot);
+
+	parkingStore.updateSpot(parkingSpot);
 };
