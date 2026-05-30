@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 
 curl_output.json
+publish_test/
 
 .env

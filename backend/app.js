@@ -15,7 +15,12 @@ app.listen(port, () => {
 });
 
 startMqtt("intstv26_parking/out/testFERparking", onParkingStatusMessage);
+
 const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on("connection", () => {
+	console.log("Frontend connected");
+});
 
 /**
  * On receiving message from MQTT broker, send message via WebSockets to client.
@@ -26,7 +31,7 @@ function onParkingStatusMessage(message) {
 
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
-			client.send(data);
+			client.send(message);
 		}
 	});
 }

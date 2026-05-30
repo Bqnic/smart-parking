@@ -15,15 +15,6 @@ function startMqtt(subscribeTopic, onMessageReceived) {
 		mqttClient.subscribe(subscribeTopic, (err) => {
 			if (err) console.log("Subscribed", err);
 		});
-
-		// Testing publish, remove later
-		mqttClient.publish(
-			"intstv26_parking/in/testFERparking",
-			buildPayload(),
-			(err) => {
-				if (err) console.log("Published", err);
-			},
-		);
 	});
 
 	mqttClient.on("message", (topic, message) => {
@@ -45,23 +36,6 @@ function startMqtt(subscribeTopic, onMessageReceived) {
 
 	mqttClient.on("reconnect", () => {
 		console.log("MQTT reconnecting");
-	});
-}
-
-// For testing publishing
-function buildPayload() {
-	return JSON.stringify({
-		contentNodes: [
-			{
-				source: {
-					resource: "testParkSmartZGResource2026-status",
-				},
-
-				value: 1,
-
-				time: new Date().toISOString(),
-			},
-		],
 	});
 }
 
