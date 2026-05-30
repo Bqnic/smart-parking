@@ -9,23 +9,15 @@ interface Props {
 	spot: ParkingSpot;
 	isSelected: boolean;
 	onClick: (spot: ParkingSpot) => void;
-	onHover: (spot: ParkingSpot | null) => void;
 }
 
-export const ParkingSpotShape = ({
-	spot,
-	isSelected,
-	onClick,
-	onHover,
-}: Props) => {
+export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 	const cfg = ParkingSpotConfig[spot.status];
 	const isFree = spot.status === ParkingSpotStatus.FREE;
 
 	return (
 		<g
 			onClick={() => onClick(spot)}
-			onMouseEnter={() => onHover(spot)}
-			onMouseLeave={() => onHover(null)}
 			style={{ cursor: isFree ? "pointer" : "default" }}
 		>
 			{/* Outer glow when selected */}
@@ -125,7 +117,9 @@ export const ParkingSpotShape = ({
 				opacity={0.5}
 				fontFamily="'DM Sans', sans-serif"
 			>
-				{spot.ramp === ParkingSpotRamp.UP ? "↑ Ramp up" : "↓ Ramp down"}
+				{spot.ramp === ParkingSpotRamp.UP
+					? "↑ Rampa dignuta"
+					: "↓ Ramp spuštena"}
 			</text>
 		</g>
 	);

@@ -8,13 +8,11 @@ import {
 } from "../../types/parking-spot.types";
 import { Legend } from "./legend";
 import { ParkingSpotShape } from "./parking-spot-shape";
-import { SpotTooltip } from "../spot-tooltip";
 import { SelectedSpotDialog } from "./selected-spot-dialog";
 
 export const ParkingMap = observer(() => {
 	const { spots } = parkingStore;
 	const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
-	const [hoveredSpot, setHoveredSpot] = useState<ParkingSpot | null>(null);
 
 	const freeCount = spots.filter(
 		(s) => s.status === ParkingSpotStatus.FREE,
@@ -24,8 +22,6 @@ export const ParkingMap = observer(() => {
 		if (spot.status !== ParkingSpotStatus.FREE) return;
 		setSelectedSpot((prev) => (prev?.id === spot.id ? null : spot));
 	};
-
-	const tooltipSpot = hoveredSpot ?? selectedSpot;
 
 	return (
 		<div className="flex flex-col gap-3 h-full">
@@ -157,18 +153,8 @@ export const ParkingMap = observer(() => {
 									spot={spot}
 									isSelected={selectedSpot?.id === spot.id}
 									onClick={handleSpotClick}
-									onHover={setHoveredSpot}
 								/>
 							))}
-
-							{/* Tooltip */}
-							{tooltipSpot && (
-								<SpotTooltip
-									spot={tooltipSpot}
-									x={tooltipSpot.x + 70}
-									y={tooltipSpot.y - 2}
-								/>
-							)}
 						</svg>
 					</TransformComponent>
 				</TransformWrapper>
