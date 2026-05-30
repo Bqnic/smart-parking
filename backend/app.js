@@ -6,12 +6,8 @@ const startWebsockets = require("./ws.js");
 const app = express();
 const port = 3000;
 
-app.get("/", (req, res) => {
-	res.send("Hello World!");
-});
-
 app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`);
+	console.log(`Listening on port ${port}`);
 });
 
 // IoT platform to backend connection
@@ -24,11 +20,17 @@ const wss = startWebsockets(8080);
  * @param {string} message
  */
 function onParkingStatusMessage(message) {
-	console.log(message);
+	const data = JSON.parse(message);
+
+	const cleanedData = {
+		resource: data.contentNodes[0].source.resource,
+		value: data.contentNodes[0].value,
+		time: data.contentNodes[0].time,
+	};
 
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
-			client.send(message);
+			client.send(JSON.stringify(cleanedData));
 		}
 	});
 }

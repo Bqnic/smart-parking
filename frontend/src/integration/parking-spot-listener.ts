@@ -13,5 +13,6 @@ ws.onerror = (err) => {
 };
 
 ws.onmessage = (event) => {
-	console.log("Received raw:", event.data);
+	const data = JSON.parse(event.data);
+	console.log(data);
 };
