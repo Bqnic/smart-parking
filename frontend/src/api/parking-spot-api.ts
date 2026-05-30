@@ -1,5 +1,6 @@
 class ParkingSpotApi {
-	private readonly api = `http://localhost:3000`;
+	private readonly api =
+		import.meta.env.VITE_SERVER_URL_HTTPS || `http://localhost:3000`;
 
 	reserve = async (parkingId: string) => {
 		const res = await fetch(`${this.api}/reserve/${parkingId}`, {
