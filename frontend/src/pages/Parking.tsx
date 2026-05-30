@@ -1,20 +1,59 @@
-import type { ParkingSpot } from "../components/parking-map/parking-map-types";
 import { ParkingMap } from "../components/parking-map/ParkingMap";
+import {
+	ParkingSpotRamp,
+	ParkingSpotStatus,
+	type ParkingSpot,
+} from "../types/parking-spot.types";
 
 // test data
 const parkingSpots = [
-	{ id: "P1", status: "free" },
-	{ id: "P2", status: "occupied" },
-	{ id: "P3", status: "reserved" },
-	{ id: "P4", status: "free" },
-	{ id: "P5", status: "occupied" },
-	{ id: "P6", status: "free" },
-	{ id: "P7", status: "reserved" },
+	{
+		id: "P1",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 4,
+	},
+	{
+		id: "P2",
+		status: ParkingSpotStatus.OCCUPIED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 6,
+	},
+	{
+		id: "P3",
+		status: ParkingSpotStatus.RESERVED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 14,
+	},
+	{
+		id: "P4",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.UP,
+		distance: 2,
+	},
+	{
+		id: "P5",
+		status: ParkingSpotStatus.OCCUPIED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 4,
+	},
+	{
+		id: "P6",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.UP,
+		distance: 6,
+	},
+	{
+		id: "P7",
+		status: ParkingSpotStatus.RESERVED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 15,
+	},
 ] as ParkingSpot[];
 
 export const Parking: React.FC = () => {
 	const freeSpots = parkingSpots.filter(
-		(spot) => spot.status === "free",
+		(spot) => spot.status === ParkingSpotStatus.FREE,
 	).length;
 
 	const handleSpotClick = (spot: (typeof parkingSpots)[number]) => {

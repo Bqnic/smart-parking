@@ -1,4 +1,5 @@
-import { ParkingSpotConfig, type ParkingSpot } from "./parking-map-types";
+import type { ParkingSpot } from "../../types/parking-spot.types";
+import { ParkingSpotConfig } from "./parking-map-types";
 
 interface Props {
 	spots: ParkingSpot[];
