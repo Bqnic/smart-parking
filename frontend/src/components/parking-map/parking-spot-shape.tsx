@@ -6,7 +6,7 @@ import {
 import { ParkingSpotConfig } from "./parking-map-types";
 
 interface Props {
-	spot: ParkingSpot;
+	spot: ParkingSpot & { x: number; y: number };
 	isSelected: boolean;
 	onClick: (spot: ParkingSpot) => void;
 }
@@ -20,7 +20,7 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 			onClick={() => onClick(spot)}
 			style={{ cursor: isFree ? "pointer" : "default" }}
 		>
-			{/* Outer glow when selected */}
+			{/* Selection glow */}
 			{isSelected && (
 				<rect
 					x={spot.x - 5}
@@ -33,7 +33,7 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 				/>
 			)}
 
-			{/* Spot body */}
+			{/* Body */}
 			<rect
 				x={spot.x}
 				y={spot.y}
@@ -45,33 +45,21 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 				strokeWidth={isSelected ? 3 : 2}
 			/>
 
-			{/* Dashed parking lines */}
+			{/* Divider */}
 			<line
 				x1={spot.x + 2}
 				y1={spot.y + 45}
 				x2={spot.x + 138}
 				y2={spot.y + 45}
 				stroke={cfg.stroke}
-				strokeWidth={1}
 				strokeDasharray="6,5"
 				opacity={0.3}
 			/>
 
-			{/* Status indicator dot */}
+			{/* Status dot */}
 			<circle cx={spot.x + 16} cy={spot.y + 16} r={7} fill={cfg.stroke} />
-			{isFree && (
-				<circle
-					cx={spot.x + 16}
-					cy={spot.y + 16}
-					r={11}
-					fill="none"
-					stroke={cfg.stroke}
-					strokeWidth={1.5}
-					opacity={0.4}
-				/>
-			)}
 
-			{/* Spot ID */}
+			{/* ID */}
 			<text
 				x={spot.x + 70}
 				y={spot.y + 52}
@@ -79,22 +67,11 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 				fontSize="22"
 				fontWeight="800"
 				fill={cfg.text}
-				fontFamily="'DM Sans', sans-serif"
-				letterSpacing="-0.5"
 			>
 				{spot.id}
 			</text>
 
-			{/* Distance badge */}
-			<rect
-				x={spot.x + 92}
-				y={spot.y + 8}
-				width={38}
-				height={16}
-				rx={5}
-				fill={cfg.stroke}
-				opacity={0.15}
-			/>
+			{/* Distance */}
 			<text
 				x={spot.x + 111}
 				y={spot.y + 20}
@@ -102,12 +79,11 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 				fontSize="9"
 				fontWeight="700"
 				fill={cfg.text}
-				fontFamily="'DM Sans', sans-serif"
 			>
 				{spot.distance}m
 			</text>
 
-			{/* Ramp arrow */}
+			{/* Ramp */}
 			<text
 				x={spot.x + 70}
 				y={spot.y + 80}
@@ -115,7 +91,6 @@ export const ParkingSpotShape = ({ spot, isSelected, onClick }: Props) => {
 				fontSize="11"
 				fill={cfg.text}
 				opacity={0.5}
-				fontFamily="'DM Sans', sans-serif"
 			>
 				{spot.ramp === ParkingSpotRamp.UP
 					? "↑ Rampa dignuta"
