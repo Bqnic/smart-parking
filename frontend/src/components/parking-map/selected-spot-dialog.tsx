@@ -1,5 +1,8 @@
 import { observer } from "mobx-react-lite";
-import type { ParkingSpot } from "../../types/parking-spot.types";
+import {
+	ParkingSpotRamp,
+	type ParkingSpot,
+} from "../../types/parking-spot.types";
 import { parkingStore } from "../../stores/parking-store";
 
 interface Props {
@@ -26,7 +29,9 @@ export const SelectedSpotDialog: React.FC<Props> = observer(
 					</p>
 					<p className="text-xs text-slate-500">
 						{selectedSpot.distance}m udaljeno · Rampa{" "}
-						{selectedSpot.ramp}
+						{selectedSpot.ramp === ParkingSpotRamp.UP
+							? "dignuta"
+							: "spuštena"}
 					</p>
 				</div>
 				<div className="flex gap-2">

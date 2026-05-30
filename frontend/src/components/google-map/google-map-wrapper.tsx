@@ -54,8 +54,8 @@ export default function GoogleMapWrapper() {
 				<input
 					value={address}
 					onChange={(e) => setAddress(e.target.value)}
-					placeholder="Enter address"
 					style={{ padding: 8, width: 300 }}
+					readOnly
 				/>
 				<button onClick={geocodeAddress} style={{ marginLeft: 10 }}>
 					Locate
