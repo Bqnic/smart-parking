@@ -5,7 +5,9 @@ const startMqtt = require("./mqtt-subscriber.js");
 const startWebsockets = require("./ws.js");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+const server = http.createServer(app);
 
 app.use(cors());
 
@@ -15,7 +17,7 @@ const mqttClient = startMqtt(
 	onParkingStatusMessage,
 );
 // Backend to frontend connection
-const wss = startWebsockets(8080);
+const wss = startWebsockets(server);
 
 app.post("/reserve/:id", (req, res) => {
 	const parkingId = req.params.id;
@@ -100,6 +102,6 @@ function processParkingMessage(data) {
 	return result;
 }
 
-app.listen(port, () => {
+server.listen(port, () => {
 	console.log(`Listening on port ${port}`);
 });
