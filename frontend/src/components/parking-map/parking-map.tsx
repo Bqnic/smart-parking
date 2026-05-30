@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { parkingStore } from "../../stores/parking-store";
 import {
 	ParkingSpotStatus,
@@ -9,42 +9,19 @@ import {
 import { Legend } from "./legend";
 import { ParkingSpotShape } from "./parking-spot-shape";
 import { SelectedSpotDialog } from "./selected-spot-dialog";
-import type { PositionedSpot } from "./parking-map-types";
 
 export const ParkingMap = observer(() => {
-	const { spots } = parkingStore;
+	const { spots, positionedSpots } = parkingStore;
 	const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
 
 	const freeCount = spots.filter(
 		(s) => s.status === ParkingSpotStatus.FREE,
 	).length;
 
-	const ROAD_Y = 270;
-	const TOP_Y = ROAD_Y - 110;
-	const BOTTOM_Y = ROAD_Y + 110;
-
-	const START_X = 80;
-	const STEP_X = 170;
-
 	const handleSpotClick = (spot: ParkingSpot) => {
 		if (spot.status !== ParkingSpotStatus.FREE) return;
 		setSelectedSpot((prev) => (prev?.id === spot.id ? null : spot));
 	};
-
-	const positionedSpots: PositionedSpot[] = useMemo(() => {
-		const half = Math.ceil(spots.length / 2);
-
-		return spots.map((spot, index) => {
-			const isTop = index < half;
-			const laneIndex = isTop ? index : index - half;
-
-			return {
-				...spot,
-				x: START_X + laneIndex * STEP_X,
-				y: isTop ? TOP_Y : BOTTOM_Y,
-			};
-		});
-	}, [spots]);
 
 	return (
 		<div className="flex flex-col gap-3 h-full">

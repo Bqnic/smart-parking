@@ -58,6 +58,13 @@ const parkingSpots = [
 	},
 ];
 
+const ROAD_Y = 270;
+const TOP_Y = ROAD_Y - 110;
+const BOTTOM_Y = ROAD_Y + 110;
+
+const START_X = 80;
+const STEP_X = 170;
+
 class ParkingStore {
 	spots: ParkingSpot[] = [...parkingSpots];
 
@@ -96,6 +103,21 @@ class ParkingStore {
 	reserveSpot = (parkingSpotId: string) => {
 		parkingSpotApi.reserve(parkingSpotId);
 	};
+
+	get positionedSpots() {
+		const half = Math.ceil(this.spots.length / 2);
+
+		return this.spots.map((spot, i) => {
+			const isTop = i < half;
+			const laneIndex = isTop ? i : i - half;
+
+			return {
+				...spot,
+				x: START_X + laneIndex * STEP_X,
+				y: isTop ? TOP_Y : BOTTOM_Y,
+			};
+		});
+	}
 }
 
 export const parkingStore = new ParkingStore();
