@@ -1,4 +1,9 @@
-import { ParkingSpotStatus } from "../../types/parking-spot.types";
+import {
+	ParkingSpotStatus,
+	type ParkingSpot,
+} from "../../types/parking-spot.types";
+
+export type PositionedSpot = ParkingSpot & { x: number; y: number };
 
 interface ParkingSpotStyle {
 	label: string;

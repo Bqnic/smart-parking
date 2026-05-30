@@ -9,8 +9,7 @@ import {
 import { Legend } from "./legend";
 import { ParkingSpotShape } from "./parking-spot-shape";
 import { SelectedSpotDialog } from "./selected-spot-dialog";
-
-type PositionedSpot = ParkingSpot & { x: number; y: number };
+import type { PositionedSpot } from "./parking-map-types";
 
 export const ParkingMap = observer(() => {
 	const { spots } = parkingStore;

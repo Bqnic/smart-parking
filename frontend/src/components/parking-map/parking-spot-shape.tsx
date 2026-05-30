@@ -3,10 +3,10 @@ import {
 	ParkingSpotRamp,
 	type ParkingSpot,
 } from "../../types/parking-spot.types";
-import { ParkingSpotConfig } from "./parking-map-types";
+import { ParkingSpotConfig, type PositionedSpot } from "./parking-map-types";
 
 interface Props {
-	spot: ParkingSpot & { x: number; y: number };
+	spot: PositionedSpot;
 	isSelected: boolean;
 	onClick: (spot: ParkingSpot) => void;
 }
