@@ -48,7 +48,7 @@ function buildPayload() {
 }
 
 // publish every interval seconds
-const interval = 5;
+const interval = 1;
 setInterval(() => {
 	const payload = buildPayload();
 

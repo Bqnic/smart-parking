@@ -1,21 +1,33 @@
 import { ParkingSpotStatus } from "../../types/parking-spot.types";
 
 interface ParkingSpotStyle {
-	style: string;
-	icon: string;
+	label: string;
+	badge: string;
+	fill: string;
+	stroke: string;
+	text: string;
 }
 
 export const ParkingSpotConfig: Record<ParkingSpotStatus, ParkingSpotStyle> = {
 	[ParkingSpotStatus.FREE]: {
-		style: "bg-emerald-100 border-emerald-400 text-emerald-700",
-		icon: "🟢",
+		stroke: "#22c55e",
+		fill: "#f0fdf4",
+		text: "#15803d",
+		label: "Free",
+		badge: "bg-green-100 text-green-700",
 	},
 	[ParkingSpotStatus.OCCUPIED]: {
-		style: "bg-red-100 border-red-400 text-red-700",
-		icon: "🔴",
+		stroke: "#ef4444",
+		fill: "#fef2f2",
+		text: "#b91c1c",
+		label: "Occupied",
+		badge: "bg-red-100 text-red-700",
 	},
 	[ParkingSpotStatus.RESERVED]: {
-		style: "bg-orange-100 border-orange-400 text-orange-700",
-		icon: "🟠",
+		stroke: "#f59e0b",
+		fill: "#fffbeb",
+		text: "#b45309",
+		label: "Reserved",
+		badge: "bg-amber-100 text-amber-700",
 	},
 };

@@ -14,4 +14,7 @@ export interface ParkingSpot {
 	status: ParkingSpotStatus;
 	ramp: ParkingSpotRamp;
 	distance: number;
+
+	x: number;
+	y: number;
 }

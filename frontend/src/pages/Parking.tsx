@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
-import { ParkingMap } from "../components/parking-map/ParkingMap";
+
+import { ParkingMap } from "../components/parking-map/parking-map";
 import { ParkingSpotStatus } from "../types/parking-spot.types";
 import { parkingStore } from "../stores/parking-store";
 
