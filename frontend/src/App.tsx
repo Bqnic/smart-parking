@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home } from "./pages/Home";
-import { Parking } from "./pages/Parking";
+import { Home } from "./pages/home";
+import { Parking } from "./pages/parking";
 import { NavBar } from "./components/nav-bar";
 
 export const App: React.FC = () => {

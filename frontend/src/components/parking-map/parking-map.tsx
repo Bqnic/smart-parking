@@ -6,7 +6,7 @@ import {
 	ParkingSpotStatus,
 	type ParkingSpot,
 } from "../../types/parking-spot.types";
-import { Legend } from "./Legend";
+import { Legend } from "./legend";
 import { ParkingSpotShape } from "./parking-spot-shape";
 import { SpotTooltip } from "../spot-tooltip";
 import { SelectedSpotDialog } from "./selected-spot-dialog";
