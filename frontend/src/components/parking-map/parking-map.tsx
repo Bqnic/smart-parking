@@ -36,13 +36,13 @@ export const ParkingMap = observer(() => {
 						className="text-lg font-bold text-slate-800"
 						style={{ fontFamily: "'DM Sans', sans-serif" }}
 					>
-						Parking Map
+						Mapa
 					</h2>
 					<p className="text-xs text-slate-500">
 						<span className="font-semibold text-green-600">
 							{freeCount}
 						</span>{" "}
-						of {spots.length} spots available
+						od {spots.length} mjesta slobodno
 					</p>
 				</div>
 				<Legend />
@@ -172,11 +172,6 @@ export const ParkingMap = observer(() => {
 						</svg>
 					</TransformComponent>
 				</TransformWrapper>
-
-				{/* Zoom hint */}
-				<p className="absolute bottom-3 right-4 text-xs text-slate-400 pointer-events-none select-none">
-					Scroll to zoom · Drag to pan
-				</p>
 			</div>
 
 			<SelectedSpotDialog

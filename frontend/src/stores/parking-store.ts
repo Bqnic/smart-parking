@@ -4,6 +4,7 @@ import {
 	ParkingSpotStatus,
 	type ParkingSpot,
 } from "../types/parking-spot.types";
+import { parkingSpotApi } from "../api/parking-spot-api";
 
 // test data
 const parkingSpots = [
@@ -73,6 +74,10 @@ class ParkingStore {
 	}
 
 	updateSpot = (parkingSpot: ParkingSpot) => {
+		if (!parkingSpot) {
+			return;
+		}
+
 		const spot = this.spots.find((s) => s.id === parkingSpot.id);
 		if (!spot) {
 			this.spots.push(parkingSpot);
@@ -94,6 +99,10 @@ class ParkingStore {
 		};
 
 		this.spots[index] = newSpot;
+	};
+
+	reserveSpot = (parkingSpotId: string) => {
+		parkingSpotApi.reserve(parkingSpotId);
 	};
 }
 

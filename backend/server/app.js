@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const startMqtt = require("./mqtt-subscriber.js");
 const startWebsockets = require("./ws.js");
@@ -6,14 +7,44 @@ const startWebsockets = require("./ws.js");
 const app = express();
 const port = 3000;
 
-app.listen(port, () => {
-	console.log(`Listening on port ${port}`);
-});
+app.use(cors());
 
 // IoT platform to backend connection
-startMqtt("intstv26_parking/out/testFERparking", onParkingStatusMessage);
+const mqttClient = startMqtt(
+	"intstv26_parking/out/testFERparking",
+	onParkingStatusMessage,
+);
 // Backend to frontend connection
 const wss = startWebsockets(8080);
+
+app.post("/reserve/:id", (req, res) => {
+	const parkingId = req.params.id;
+
+	const payload = JSON.stringify({
+		contentNodes: [
+			{
+				source: {
+					resource: `FER_parking_spot_${parkingId}_status`,
+				},
+				value: 1, // reserve
+				time: new Date().toISOString(),
+			},
+		],
+	});
+
+	mqttClient.publish("intstv26_parking/in/testFERparking", payload, (err) => {
+		if (err) {
+			console.error("Publish error:", err);
+		} else {
+			console.log("Published:", payload);
+		}
+	});
+
+	res.json({
+		success: true,
+		reserved: parkingId,
+	});
+});
 
 /**
  * On receiving message from MQTT broker, send message via WebSockets to clients.
@@ -68,3 +99,7 @@ function processParkingMessage(data) {
 
 	return result;
 }
+
+app.listen(port, () => {
+	console.log(`Listening on port ${port}`);
+});

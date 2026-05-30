@@ -37,6 +37,8 @@ function startMqtt(subscribeTopic, onMessageReceived) {
 	mqttClient.on("reconnect", () => {
 		console.log("MQTT reconnecting");
 	});
+
+	return mqttClient;
 }
 
 module.exports = startMqtt;

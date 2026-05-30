@@ -8,9 +8,10 @@
 	"main": "app.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node --env-file=.env app.js"
+		"start": "node --env-file=.env ./server/app.js"
 	},
 	"dependencies": {
+		"cors": "^2.8.6",
 		"express": "^5.2.1",
 		"mqtt": "^5.15.1"
 	}
