@@ -22,11 +22,11 @@ const wss = startWebsockets(8080);
 function onParkingStatusMessage(message) {
 	const data = JSON.parse(message);
 
-	const cleanedData = {
-		resource: data.contentNodes[0].source.resource,
-		value: data.contentNodes[0].value,
-		time: data.contentNodes[0].time,
-	};
+	const cleanedData = data.contentNodes.map((node) => ({
+		resource: node.source.resource,
+		value: node.value,
+		time: node.time,
+	}));
 
 	wss.clients.forEach((client) => {
 		if (client.readyState === WebSocket.OPEN) {
