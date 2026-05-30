@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { ParkingMap } from "../components/parking-map/parking-map";
 import { ParkingSpotStatus } from "../types/parking-spot.types";
 import { parkingStore } from "../stores/parking-store";
+import GoogleMapWrapper from "../components/google-map/google-map-wrapper";
 
 export const Parking: React.FC = observer(() => {
 	const { spots } = parkingStore;
@@ -51,6 +52,8 @@ export const Parking: React.FC = observer(() => {
 					</div>
 				</div>
 			</div>
+
+			<GoogleMapWrapper />
 
 			<section className="mt-6 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
 				<div className="mb-5">
