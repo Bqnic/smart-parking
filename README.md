@@ -1,6 +1,7 @@
 # Smart Parking
 
 Frontend written in React + Typescript.
+
 Backend writtein in NodeJS (ExpressJS).
 
 ### Run frontend
@@ -15,5 +16,5 @@ npm run dev
 
 ```bash
 cd backend
-node app.js
+npm start
 ```
