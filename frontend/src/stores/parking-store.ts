@@ -66,6 +66,41 @@ const parkingSpots = [
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 15,
 	},
+	{
+		location: ParkingLocation.ARENA,
+		id: "004",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.UP,
+		distance: 2,
+	},
+	{
+		location: ParkingLocation.ARENA,
+		id: "005",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 4,
+	},
+	{
+		location: ParkingLocation.ARENA,
+		id: "006",
+		status: ParkingSpotStatus.FREE,
+		ramp: ParkingSpotRamp.UP,
+		distance: 6,
+	},
+	{
+		location: ParkingLocation.ARENA,
+		id: "007",
+		status: ParkingSpotStatus.RESERVED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 15,
+	},
+	{
+		location: ParkingLocation.ARENA,
+		id: "008",
+		status: ParkingSpotStatus.RESERVED,
+		ramp: ParkingSpotRamp.DOWN,
+		distance: 15,
+	},
 ];
 
 const ROAD_Y = 270;
@@ -77,6 +112,7 @@ const STEP_X = 170;
 
 class ParkingStore {
 	spots: ParkingSpot[] = [...parkingSpots];
+	activeLocation: ParkingLocation = ParkingLocation.FER;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -87,9 +123,12 @@ class ParkingStore {
 			return;
 		}
 
-		const spot = this.spots.find((s) => s.id === parkingSpot.id);
+		const spot = this.spots.find(
+			(s) =>
+				s.location === parkingSpot.location && s.id === parkingSpot.id,
+		);
+
 		if (!spot) {
-			this.spots.push(parkingSpot);
 			return;
 		}
 
@@ -114,10 +153,24 @@ class ParkingStore {
 		parkingSpotApi.reserve(parkingSpotId);
 	};
 
-	get positionedSpots() {
-		const half = Math.ceil(this.spots.length / 2);
+	updateParkingLocation = (newLocation: ParkingLocation) => {
+		this.activeLocation = newLocation;
+	};
 
-		return this.spots.map((spot, i) => {
+	get parkingSpots() {
+		return this.spots.filter((s) => s.location === this.activeLocation);
+	}
+
+	get freeSpotsCount() {
+		return this.parkingSpots.filter(
+			(s) => s.status === ParkingSpotStatus.FREE,
+		).length;
+	}
+
+	get positionedSpots() {
+		const half = Math.ceil(this.parkingSpots.length / 2);
+
+		return this.parkingSpots.map((spot, i) => {
 			const isTop = i < half;
 			const laneIndex = isTop ? i : i - half;
 
