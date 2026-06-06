@@ -18,14 +18,15 @@ const mqttClient = startMqtt("intstv26_parking/out/#", onParkingStatusMessage);
 // Backend to frontend connection
 const wss = startWebsockets(server);
 
-app.post("/reserve/:id", (req, res) => {
+app.post("/reserve/:location/:id", (req, res) => {
 	const parkingId = req.params.id;
+	const parkingLocation = req.params.location;
 
 	const payload = JSON.stringify({
 		contentNodes: [
 			{
 				source: {
-					resource: `FER_parking_spot_${parkingId}_status`,
+					resource: `${parkingLocation}_parking_spot_${parkingId}_status`,
 				},
 				value: 1, // reserve
 				time: new Date().toISOString(),
@@ -33,6 +34,7 @@ app.post("/reserve/:id", (req, res) => {
 		],
 	});
 
+	// TODO: PROMIJENIT PUBLISH TOPIC
 	mqttClient.publish("intstv26_parking/in/testFERparking", payload, (err) => {
 		if (err) {
 			console.error("Publish error:", err);

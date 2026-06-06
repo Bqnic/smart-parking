@@ -150,7 +150,7 @@ class ParkingStore {
 	};
 
 	reserveSpot = (parkingSpotId: string) => {
-		parkingSpotApi.reserve(parkingSpotId);
+		parkingSpotApi.reserve(this.activeLocation, parkingSpotId);
 	};
 
 	updateParkingLocation = (newLocation: ParkingLocation) => {
