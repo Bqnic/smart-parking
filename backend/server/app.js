@@ -13,10 +13,7 @@ const server = http.createServer(app);
 app.use(cors());
 
 // IoT platform to backend connection
-const mqttClient = startMqtt(
-	"intstv26_parking/out/testFERparking",
-	onParkingStatusMessage,
-);
+const mqttClient = startMqtt("intstv26_parking/out/#", onParkingStatusMessage);
 // Backend to frontend connection
 const wss = startWebsockets(server);
 
