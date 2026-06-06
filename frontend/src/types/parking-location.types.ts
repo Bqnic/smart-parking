@@ -5,7 +5,7 @@ interface ParkingLocationInfo {
 
 export enum ParkingLocation {
 	FER = "FER",
-	ARENA = "ARENA",
+	ARENA_CENTAR = "Arena_Centar",
 }
 
 export const PARKINGS: Record<ParkingLocation, ParkingLocationInfo> = {
@@ -13,7 +13,7 @@ export const PARKINGS: Record<ParkingLocation, ParkingLocationInfo> = {
 		displayName: "FER",
 		address: "24 Plitvička ul. Zagreb, Grad Zagreb",
 	},
-	[ParkingLocation.ARENA]: {
+	[ParkingLocation.ARENA_CENTAR]: {
 		displayName: "Arena Zagreb",
 		address: "Ul. Vice Vukova 8, Zagreb, Croatia",
 	},
