@@ -87,10 +87,12 @@ function processParkingMessage(data) {
 		return null;
 	}
 
+	const location = parts[1];
 	const id = parts[3];
 	const field = parts[4]; // status | ramp | distance
 
 	const result = {
+		location,
 		id,
 		status: undefined,
 		ramp: undefined,
