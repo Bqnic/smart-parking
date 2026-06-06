@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
@@ -11,10 +11,11 @@ const defaultCenter = {
 	lng: 15.969988,
 };
 
-export default function GoogleMapWrapper() {
-	const [address, setAddress] = useState(
-		"24 Plitvička ul. Zagreb, Grad Zagreb",
-	);
+interface Props {
+	address: string;
+}
+
+export const GoogleMapWrapper: React.FC<Props> = ({ address }) => {
 	const [position, setPosition] = useState(defaultCenter);
 
 	const mapRef = useRef<google.maps.Map | null>(null);
@@ -23,8 +24,14 @@ export default function GoogleMapWrapper() {
 		googleMapsApiKey: import.meta.env.VITE_GOOGLE_API || "no",
 	});
 
-	const geocodeAddress = async () => {
-		if (!address || !window.google) return;
+	useEffect(() => {
+		if (!isLoaded || !address) return;
+
+		geocodeAddress();
+	}, [address, isLoaded]);
+
+	const geocodeAddress = () => {
+		if (!window.google || !address) return;
 
 		const geocoder = new window.google.maps.Geocoder();
 
@@ -50,18 +57,6 @@ export default function GoogleMapWrapper() {
 
 	return (
 		<div>
-			<div style={{ marginBottom: 10 }}>
-				<input
-					value={address}
-					onChange={(e) => setAddress(e.target.value)}
-					style={{ padding: 8, width: 300 }}
-					readOnly
-				/>
-				<button onClick={geocodeAddress} style={{ marginLeft: 10 }}>
-					Locate
-				</button>
-			</div>
-
 			<GoogleMap
 				mapContainerStyle={containerStyle}
 				center={position}
@@ -74,4 +69,4 @@ export default function GoogleMapWrapper() {
 			</GoogleMap>
 		</div>
 	);
-}
+};

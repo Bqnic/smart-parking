@@ -11,12 +11,10 @@ import { ParkingSpotShape } from "./parking-spot-shape";
 import { SelectedSpotDialog } from "./selected-spot-dialog";
 
 export const ParkingMap = observer(() => {
-	const { spots, positionedSpots } = parkingStore;
+	const { parkingSpots, freeSpotsCount, positionedSpots } = parkingStore;
 	const [selectedSpot, setSelectedSpot] = useState<ParkingSpot | null>(null);
 
-	const freeCount = spots.filter(
-		(s) => s.status === ParkingSpotStatus.FREE,
-	).length;
+	console.log(parkingSpots);
 
 	const handleSpotClick = (spot: ParkingSpot) => {
 		if (spot.status !== ParkingSpotStatus.FREE) return;
@@ -31,9 +29,9 @@ export const ParkingMap = observer(() => {
 					<h2 className="text-lg font-bold text-slate-800">Mapa</h2>
 					<p className="text-xs text-slate-500">
 						<span className="font-semibold text-green-600">
-							{freeCount}
+							{freeSpotsCount}
 						</span>{" "}
-						od {spots.length} mjesta slobodno
+						od {parkingSpots.length} mjesta slobodno
 					</p>
 				</div>
 				<Legend />
@@ -106,7 +104,7 @@ export const ParkingMap = observer(() => {
 							{/* Spots */}
 							{positionedSpots.map((spot) => (
 								<ParkingSpotShape
-									key={spot.id}
+									key={`${spot.location}${spot.id}`}
 									spot={spot}
 									isSelected={selectedSpot?.id === spot.id}
 									onClick={handleSpotClick}

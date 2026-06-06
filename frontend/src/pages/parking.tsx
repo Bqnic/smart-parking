@@ -1,16 +1,24 @@
 import { observer } from "mobx-react-lite";
 
 import { ParkingMap } from "../components/parking-map/parking-map";
-import { ParkingSpotStatus } from "../types/parking-spot.types";
 import { parkingStore } from "../stores/parking-store";
-import GoogleMapWrapper from "../components/google-map/google-map-wrapper";
+import { GoogleMapWrapper } from "../components/google-map/google-map-wrapper";
+import { useState } from "react";
+import { ParkingLocation, PARKINGS } from "../types/parking-location.types";
 
 export const Parking: React.FC = observer(() => {
-	const { spots } = parkingStore;
+	const { freeSpotsCount, updateParkingLocation } = parkingStore;
 
-	const freeSpots = spots.filter(
-		(spot) => spot.status === ParkingSpotStatus.FREE,
-	).length;
+	const [selectedParking, setSelectedParking] = useState<ParkingLocation>(
+		ParkingLocation.FER,
+	);
+
+	function changeParkingLocation(newLocation: ParkingLocation) {
+		updateParkingLocation(newLocation);
+		setSelectedParking(newLocation);
+	}
+
+	const address = PARKINGS[selectedParking].address;
 
 	return (
 		<main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-5xl flex-col px-4 py-6">
@@ -31,7 +39,7 @@ export const Parking: React.FC = observer(() => {
 					</h2>
 
 					<div className="rounded-2xl bg-emerald-100 px-4 py-2 text-lg font-bold text-emerald-700">
-						{freeSpots}
+						{freeSpotsCount}
 					</div>
 				</div>
 
@@ -53,7 +61,27 @@ export const Parking: React.FC = observer(() => {
 				</div>
 			</div>
 
-			<GoogleMapWrapper />
+			<div className="mt-6 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+				<label className="mb-2 block text-sm font-medium text-gray-700">
+					Parking lokacija
+				</label>
+
+				<select
+					value={selectedParking}
+					onChange={(e) =>
+						changeParkingLocation(e.target.value as ParkingLocation)
+					}
+					className="rounded-xl border border-gray-300 px-3 py-2"
+				>
+					{Object.values(ParkingLocation).map((parking) => (
+						<option key={parking} value={parking}>
+							{PARKINGS[parking].displayName}
+						</option>
+					))}
+				</select>
+			</div>
+
+			<GoogleMapWrapper address={address} />
 
 			<section className="mt-6 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
 				<div className="mb-5">

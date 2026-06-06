@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const WebSocket = require("ws");
 
 const startMqtt = require("./mqtt-subscriber.js");
 const startWebsockets = require("./ws.js");
@@ -13,21 +14,20 @@ const server = http.createServer(app);
 app.use(cors());
 
 // IoT platform to backend connection
-const mqttClient = startMqtt(
-	"intstv26_parking/out/testFERparking",
-	onParkingStatusMessage,
-);
+// TODO: PUT LIST OF TOPICS FOR SUBSCRIBING
+const mqttClient = startMqtt("intstv26_parking/out/#", onParkingStatusMessage);
 // Backend to frontend connection
 const wss = startWebsockets(server);
 
-app.post("/reserve/:id", (req, res) => {
+app.post("/reserve/:location/:id", (req, res) => {
 	const parkingId = req.params.id;
+	const parkingLocation = req.params.location;
 
 	const payload = JSON.stringify({
 		contentNodes: [
 			{
 				source: {
-					resource: `FER_parking_spot_${parkingId}_status`,
+					resource: `${parkingLocation}_parking_spot_${parkingId}_status`,
 				},
 				value: 1, // reserve
 				time: new Date().toISOString(),
@@ -35,6 +35,7 @@ app.post("/reserve/:id", (req, res) => {
 		],
 	});
 
+	// TODO: CHANGE PUBLISH TOPIC
 	mqttClient.publish("intstv26_parking/in/testFERparking", payload, (err) => {
 		if (err) {
 			console.error("Publish error:", err);
@@ -77,20 +78,23 @@ function processParkingMessage(data) {
 	}
 
 	const resource = node.source.resource;
-
-	// expected format:
-	// FER_parking_spot_001_status
 	const parts = resource.split("_");
 
-	// safety check
-	if (parts.length < 5) {
+	const parkingIndex = parts.indexOf("parking");
+
+	if (parkingIndex === -1 || parkingIndex + 2 >= parts.length) {
 		return null;
 	}
 
-	const id = parts[3];
-	const field = parts[4]; // status | ramp | distance
+	// expected before "parking"
+	const location = parts.slice(0, parkingIndex).join("_");
+
+	// expected after "parking":
+	const id = parts[parkingIndex + 2]; // "001"
+	const field = parts[parkingIndex + 3]; // status | ramp | distance
 
 	const result = {
+		location,
 		id,
 		status: undefined,
 		ramp: undefined,
@@ -98,11 +102,13 @@ function processParkingMessage(data) {
 		time: node.time,
 	};
 
-	result[field] = node.value;
+	if (field) {
+		result[field] = node.value;
+	}
 
 	return result;
 }
 
 server.listen(port, () => {
-	console.log(`Listening on port ${port}`);
+	console.log(`Listening on port ${port})`);
 });

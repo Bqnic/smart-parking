@@ -14,7 +14,6 @@ export const SelectedSpotDialog: React.FC<Props> = observer(
 	({ selectedSpot, setSelectedSpot }) => {
 		function onReserveSpot() {
 			parkingStore.reserveSpot(selectedSpot!.id);
-			console.log("Reserve spot:", selectedSpot!.id);
 		}
 
 		if (!selectedSpot) {
