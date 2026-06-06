@@ -1,3 +1,5 @@
+import type { ParkingLocation } from "./parking-location.types";
+
 export enum ParkingSpotStatus {
 	FREE = 0,
 	RESERVED = 1,
@@ -10,6 +12,7 @@ export enum ParkingSpotRamp {
 }
 
 export interface ParkingSpot {
+	location: ParkingLocation;
 	id: string;
 	status: ParkingSpotStatus;
 	ramp: ParkingSpotRamp;

@@ -5,52 +5,62 @@ import {
 	type ParkingSpot,
 } from "../types/parking-spot.types";
 import { parkingSpotApi } from "../api/parking-spot-api";
+import { ParkingLocation } from "../types/parking-location.types";
 
 // test data
+// TODO: REMOVE AFTER GETTING STATE FROM IOT PLATFORM
 const parkingSpots = [
 	{
+		location: ParkingLocation.FER,
 		id: "001",
 		status: ParkingSpotStatus.FREE,
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 4,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "002",
 		status: ParkingSpotStatus.OCCUPIED,
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 6,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "003",
 		status: ParkingSpotStatus.RESERVED,
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 14,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "004",
 		status: ParkingSpotStatus.FREE,
 		ramp: ParkingSpotRamp.UP,
 		distance: 2,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "005",
 		status: ParkingSpotStatus.FREE,
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 4,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "006",
 		status: ParkingSpotStatus.FREE,
 		ramp: ParkingSpotRamp.UP,
 		distance: 6,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "007",
 		status: ParkingSpotStatus.RESERVED,
 		ramp: ParkingSpotRamp.DOWN,
 		distance: 15,
 	},
 	{
+		location: ParkingLocation.FER,
 		id: "008",
 		status: ParkingSpotStatus.RESERVED,
 		ramp: ParkingSpotRamp.DOWN,

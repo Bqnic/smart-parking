@@ -2,7 +2,7 @@ import { parkingStore } from "../stores/parking-store";
 import type { ParkingSpot } from "../types/parking-spot.types";
 
 const ws = new WebSocket(
-	import.meta.env.VITE_SERVER_URL_WSS || "ws://localhost:8080",
+	import.meta.env.VITE_SERVER_URL_WSS || "ws://localhost:3000",
 );
 
 ws.onopen = () => {

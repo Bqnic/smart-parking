@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const WebSocket = require("ws");
 
 const startMqtt = require("./mqtt-subscriber.js");
 const startWebsockets = require("./ws.js");
@@ -84,7 +85,7 @@ function processParkingMessage(data) {
 		return null;
 	}
 
-	const location = parts[1];
+	const location = parts[0];
 	const id = parts[3];
 	const field = parts[4]; // status | ramp | distance
 
