@@ -7,11 +7,11 @@ import { useState } from "react";
 import { ParkingLocation, PARKINGS } from "../types/parking-location.types";
 
 export const Parking: React.FC = observer(() => {
-	const { freeSpotsCount, updateParkingLocation } = parkingStore;
+	const { freeSpotsCount, updateParkingLocation, activeLocation } =
+		parkingStore;
 
-	const [selectedParking, setSelectedParking] = useState<ParkingLocation>(
-		ParkingLocation.FER,
-	);
+	const [selectedParking, setSelectedParking] =
+		useState<ParkingLocation>(activeLocation);
 
 	function changeParkingLocation(newLocation: ParkingLocation) {
 		updateParkingLocation(newLocation);
