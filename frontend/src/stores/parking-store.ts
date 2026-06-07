@@ -1,186 +1,153 @@
 import { makeAutoObservable } from "mobx";
 import {
-	ParkingSpotRamp,
-	ParkingSpotStatus,
-	type ParkingSpot,
+  ParkingSpotStatus,
+  type ParkingSpot,
 } from "../types/parking-spot.types";
 import { parkingSpotApi } from "../api/parking-spot-api";
 import { ParkingLocation } from "../types/parking-location.types";
 
-// test data
-// TODO: REMOVE AFTER GETTING STATE FROM IOT PLATFORM
-const parkingSpots = [
-	{
-		location: ParkingLocation.FER,
-		id: "001",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 4,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "002",
-		status: ParkingSpotStatus.OCCUPIED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 6,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "003",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 14,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "004",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 2,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "005",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 4,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "006",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 6,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "007",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 15,
-	},
-	{
-		location: ParkingLocation.FER,
-		id: "008",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 15,
-	},
-	{
-		location: ParkingLocation.ARENA_CENTAR,
-		id: "004",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 2,
-	},
-	{
-		location: ParkingLocation.ARENA_CENTAR,
-		id: "005",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 4,
-	},
-	{
-		location: ParkingLocation.ARENA_CENTAR,
-		id: "006",
-		status: ParkingSpotStatus.FREE,
-		ramp: ParkingSpotRamp.UP,
-		distance: 6,
-	},
-	{
-		location: ParkingLocation.ARENA_CENTAR,
-		id: "007",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 15,
-	},
-	{
-		location: ParkingLocation.ARENA_CENTAR,
-		id: "008",
-		status: ParkingSpotStatus.RESERVED,
-		ramp: ParkingSpotRamp.DOWN,
-		distance: 15,
-	},
-];
-
-const ROAD_Y = 270;
-const TOP_Y = ROAD_Y - 110;
-const BOTTOM_Y = ROAD_Y + 110;
-
-const START_X = 80;
-const STEP_X = 170;
-
 class ParkingStore {
-	spots: ParkingSpot[] = [...parkingSpots];
-	activeLocation: ParkingLocation = ParkingLocation.FER;
+  spots: ParkingSpot[] = [];
+  activeLocation: ParkingLocation = ParkingLocation.FER;
+  peakHours: {
+    hour: number;
+    occupiedEvents: number;
+  }[] = [];
 
-	constructor() {
-		makeAutoObservable(this);
-	}
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-	updateSpot = (parkingSpot: ParkingSpot) => {
-		if (!parkingSpot) {
-			return;
-		}
+  updateSpot = (parkingSpot: ParkingSpot) => {
+    if (!parkingSpot) {
+      return;
+    }
 
-		const spot = this.spots.find(
-			(s) =>
-				s.location === parkingSpot.location && s.id === parkingSpot.id,
-		);
+    const spot = this.spots.find(
+      (s) => s.location === parkingSpot.location && s.id === parkingSpot.id,
+    );
 
-		if (!spot) {
-			return;
-		}
+    if (!spot) {
+      this.spots.push(parkingSpot);
+      return;
+    }
 
-		const index = this.spots.indexOf(spot);
-		const newSpot = {
-			...spot,
-			status:
-				parkingSpot.status === undefined
-					? spot.status
-					: parkingSpot.status,
-			ramp: parkingSpot.ramp === undefined ? spot.ramp : parkingSpot.ramp,
-			distance:
-				parkingSpot.distance === undefined
-					? spot.distance
-					: parkingSpot.distance,
-		};
+    const index = this.spots.indexOf(spot);
+    const newSpot = {
+      ...spot,
+      status:
+        parkingSpot.status === undefined ? spot.status : parkingSpot.status,
+      ramp: parkingSpot.ramp === undefined ? spot.ramp : parkingSpot.ramp,
+    };
 
-		this.spots[index] = newSpot;
-	};
+    this.spots[index] = newSpot;
+  };
 
-	reserveSpot = (parkingSpotId: string) => {
-		parkingSpotApi.reserve(this.activeLocation, parkingSpotId);
-	};
+  reserveSpot = async (parkingSpotId: string) => {
+    try {
+      await parkingSpotApi.reserve(this.activeLocation, parkingSpotId);
+    } catch (err) {
+      console.error("Reservation failed", err);
+    }
+  };
 
-	updateParkingLocation = (newLocation: ParkingLocation) => {
-		this.activeLocation = newLocation;
-	};
+  cancelReservation = async (parkingSpotId: string) => {
+    try {
+      await parkingSpotApi.cancel(this.activeLocation, parkingSpotId);
+    } catch (err) {
+      console.error("Cancel reservation failed", err);
+    }
+  };
 
-	get parkingSpots() {
-		return this.spots.filter((s) => s.location === this.activeLocation);
-	}
+  updateParkingLocation = (newLocation: ParkingLocation) => {
+    this.activeLocation = newLocation;
+    this.loadPeakHours();
+  };
 
-	get freeSpotsCount() {
-		return this.parkingSpots.filter(
-			(s) => s.status === ParkingSpotStatus.FREE,
-		).length;
-	}
+  get parkingSpots() {
+    return this.spots.filter((s) => s.location === this.activeLocation);
+  }
 
-	get positionedSpots() {
-		const half = Math.ceil(this.parkingSpots.length / 2);
+  get freeSpotsCount() {
+    return this.parkingSpots.filter((s) => s.status === ParkingSpotStatus.FREE)
+      .length;
+  }
 
-		return this.parkingSpots.map((spot, i) => {
-			const isTop = i < half;
-			const laneIndex = isTop ? i : i - half;
+  get positionedSpots() {
+    const layout = [
+      ["001", "002", "003", null, "004", "005", "006"],
+      ["007", "008", "009", null, "010", "011", "012"],
+      ["013", "014", "015", null, "016", "017", "018"],
+    ];
 
-			return {
-				...spot,
-				x: START_X + laneIndex * STEP_X,
-				y: isTop ? TOP_Y : BOTTOM_Y,
-			};
-		});
-	}
+    const spots = [];
+
+    for (let row = 0; row < layout.length; row++) {
+      for (let col = 0; col < layout[row].length; col++) {
+        const spotId = layout[row][col];
+
+        if (!spotId) continue;
+        const spot = this.parkingSpots.find((s) => s.id === spotId);
+        if (!spot) continue;
+
+        let x = 100 + col * 180;
+        if (col >= 4) {
+          x += 60;
+        }
+        const y = 80 + row * 220;
+
+        spots.push({
+          ...spot,
+          x,
+          y,
+        });
+      }
+    }
+
+    return spots;
+  }
+
+  get occupiedSpotsCount() {
+    return this.parkingSpots.filter(
+      (s) => s.status === ParkingSpotStatus.OCCUPIED,
+    ).length;
+  }
+
+  get reservedSpotsCount() {
+    return this.parkingSpots.filter(
+      (s) => s.status === ParkingSpotStatus.RESERVED,
+    ).length;
+  }
+
+  get occupancyPercentage() {
+    if (this.parkingSpots.length === 0) {
+      return 0;
+    }
+
+    return Math.round(
+      ((this.occupiedSpotsCount + this.reservedSpotsCount) /
+        this.parkingSpots.length) *
+        100,
+    );
+  }
+
+  get parkingFull() {
+    return this.freeSpotsCount === 0;
+  }
+
+  loadPeakHours = async () => {
+    this.peakHours = await parkingSpotApi.getPeakHours(this.activeLocation);
+  };
+
+  loadInitialState = async () => {
+    try {
+      const spots = await parkingSpotApi.getInitialState();
+
+      this.spots = spots;
+    } catch (err) {
+      console.error("Failed loading the parking state", err);
+    }
+  };
 }
 
 export const parkingStore = new ParkingStore();

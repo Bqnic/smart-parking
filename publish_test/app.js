@@ -52,7 +52,7 @@ const interval = 1;
 setInterval(() => {
 	const payload = buildPayload();
 
-	mqttClient.publish("intstv26_parking/in/testFERparking", payload, (err) => {
+	mqttClient.publish("intstv26_parking/in/FER_parking", payload, (err) => {
 		if (err) {
 			console.error("Publish error:", err);
 		} else {
